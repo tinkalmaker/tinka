@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LOZO SMP Builder</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,Arial;background:#0b1020;color:#eef2ff}
+header{padding:18px 20px;background:#111936;border-bottom:1px solid #263154;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:22px;font-weight:800;color:#7dd3fc}.badge{font-size:12px;background:#18244a;padding:7px 10px;border-radius:999px}
+main{max-width:1000px;margin:auto;padding:22px}.hero{padding:25px;background:linear-gradient(135deg,#172554,#0f172a);border-radius:20px;margin-bottom:18px}
+h1{margin:0 0 8px;font-size:32px}.muted{color:#aab6d3}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.card{background:#111936;border:1px solid #263154;border-radius:16px;padding:17px}
+.card h3{margin-top:0}.row{display:flex;gap:10px;flex-wrap:wrap}
+button,select,input{border:0;border-radius:10px;padding:11px 13px;font-size:14px}
+button{background:#38bdf8;color:#06111f;font-weight:800;cursor:pointer}button.secondary{background:#243052;color:#eef2ff}
+input,select{background:#0a1127;color:#eef2ff;border:1px solid #2b3960;width:100%}
+.progress{height:10px;background:#202b4b;border-radius:99px;overflow:hidden}.bar{height:100%;width:0;background:#38bdf8;transition:.5s}
+#status{margin-top:10px;min-height:24px}.feature{display:flex;gap:10px;align-items:center;margin:9px 0}.check{color:#86efac}
+footer{text-align:center;color:#7180a4;padding:25px}
+</style>
+</head>
+<body>
+<header><div class="logo">🟩 LOZO SMP</div><div class="badge">FREE BUILDER DEMO</div></header>
+<main>
+<section class="hero">
+<h1>Build your Minecraft SMP</h1>
+<p class="muted">Create your LOZO SMP configuration from your phone. This starter website generates a server setup plan; real Minecraft hosting requires a server host/backend.</p>
+<div class="row">
+<button onclick="build()">⚡ Build LOZO SMP</button>
+<button class="secondary" onclick="downloadConfig()">⬇️ Download Config</button>
+</div>
+<div class="progress" style="margin-top:18px"><div id="bar" class="bar"></div></div>
+<div id="status"></div>
+</section>
+
+<section class="grid">
+<div class="card">
+<h3>⚙️ Server</h3>
+<label>Server name</label><input id="name" value="LOZO SMP">
+<label style="display:block;margin-top:10px">Version</label>
+<select id="version"><option>Paper 1.21.x</option><option>Paper 1.20.x</option></select>
+</div>
+<div class="card">
+<h3>🌍 World</h3>
+<div class="feature"><span class="check">✓</span> Survival world</div>
+<div class="feature"><span class="check">✓</span> Nether & End</div>
+<div class="feature"><span class="check">✓</span> Custom spawn plan</div>
+<div class="feature"><span class="check">✓</span> PvP arena</div>
+</div>
+<div class="card">
+<h3>💰 Gameplay</h3>
+<div class="feature"><span class="check">✓</span> Economy</div>
+<div class="feature"><span class="check">✓</span> Shops & Auction</div>
+<div class="feature"><span class="check">✓</span> Quests & Crates</div>
+<div class="feature"><span class="check">✓</span> Claims & Protection</div>
+</div>
+<div class="card">
+<h3>👑 Ranks</h3>
+<div class="feature"><span class="check">✓</span> Member</div>
+<div class="feature"><span class="check">✓</span> VIP / MVP / Elite</div>
+<div class="feature"><span class="check">✓</span> Helper / Mod / Admin</div>
+<div class="feature"><span class="check">✓</span> Owner</div>
+</div>
+</section>
+
+<section class="card" style="margin-top:14px">
+<h3>📋 Generated setup</h3>
+<pre id="output" style="white-space:pre-wrap;color:#cbd5e1">Click “Build LOZO SMP” to generate your setup plan.</pre>
+</section>
+</main>
+<footer>LOZO SMP Builder • Static starter site • Not a Minecraft hosting backend</footer>
+<script>
+let config;
+function makeConfig(){
+ const name=document.getElementById('name').value||'LOZO SMP';
+ const version=document.getElementById('version').value;
+ return {server_name:name,software:version,mode:'Survival',difficulty:'Hard',pvp:true,worlds:['lozo_world','lozo_nether','lozo_end'],plugins:['EssentialsX','LuckPerms','Vault','WorldEdit','WorldGuard','Economy','Claims','Shops/Auction','Quests','Crates','Duels'],spawn:{size:'300x300',areas:['LOZO Spawn','Rules','Shops','Auction','Crates','Quest Centre','PvP Arena','Event Arena']},ranks:['Member','VIP','MVP','Elite','Legend','Helper','Moderator','Admin','Owner']};
+}
+function build(){
+ config=makeConfig(); let bar=document.getElementById('bar'), status=document.getElementById('status');
+ let p=0; status.textContent='Preparing LOZO SMP configuration...';
+ let t=setInterval(()=>{p+=20;bar.style.width=p+'%';if(p>=100){clearInterval(t);status.textContent='✅ LOZO SMP setup plan generated!';document.getElementById('output').textContent=JSON.stringify(config,null,2)}},250);
+}
+function downloadConfig(){
+ config=config||makeConfig();
+ const blob=new Blob([JSON.stringify(config,null,2)],{type:'application/json'});
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='lozo-smp-config.json';a.click();URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>
